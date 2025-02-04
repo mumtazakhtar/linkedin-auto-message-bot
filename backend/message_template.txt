@@ -1,6 +1,6 @@
 Hello {firstName},
 
-I am {senderName} at BearConnect.
+I am {senderName} from BearConnect.
 I came across your profile and see that you are working as {role} at {company}.
 At our company, we make LinkedIn Automation easy for you.
 Do reply back to learn more about us.

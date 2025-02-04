@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 function App() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
     const [profiles, setProfiles] = useState([]);
 
     const fetchProfiles = async () => {
@@ -11,7 +10,7 @@ function App() {
             const res = await fetch('http://localhost:5000/scrape', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, searchQuery })
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
@@ -51,16 +50,6 @@ function App() {
                 />
             </label>
             <br />
-
-            <label>
-                Search Query:
-                <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="e.g. Software Engineer"
-                />
-            </label>
             <button onClick={fetchProfiles} style={{ marginLeft: '0.5rem' }}>
                 Search
             </button>

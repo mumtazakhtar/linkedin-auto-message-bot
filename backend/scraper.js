@@ -6,7 +6,7 @@ puppeteer.use(StealthPlugin());
 
 const LINKEDIN_URL = "https://www.linkedin.com";
 const COOKIES_FILE_PATH = "./cookies.json";
-const SEARCH_QUERY = "https://www.linkedin.com/search/results/people/?firstName=akhtar&network=%5B%22F%22%5D&origin=FACETED_SEARCH&sid=dlE";
+const SEARCH_QUERY = "https://www.linkedin.com/search/results/people/?firstName=mona&network=%5B%22F%22%5D&origin=FACETED_SEARCH&sid=dlE";
 const MESSAGE_TEMPLATE_PATH = "./message_template.txt"; // Path to message template
 
 let loggedInUserFirstName = "there"; // Default if not found
@@ -97,10 +97,10 @@ async function extractLoggedInUserFirstName(page) {
         loggedInUserFirstName = fullName.split(" ")[0]; // Extract first name only
         console.log(`✅ Logged-in user detected: ${loggedInUserFirstName}`);
       } else {
-        console.log("❌ Failed to extract logged-in user's first name.");
+        console.error("❌ Failed to extract logged-in user's first name.");
       }
     } catch (error) {
-      console.log(`❌ Error extracting logged-in user's name: ${error.message}`);
+      console.error(`❌ Error extracting logged-in user's name: ${error.message}`);
     }
   }
    
@@ -108,7 +108,7 @@ async function extractLoggedInUserFirstName(page) {
 /**
  * Extracts profile information from LinkedIn search results
  */
-async function extractProfiles(page) {
+async function extractProfilesAndSendMessage(page) {
   console.log("🔹 Navigating to LinkedIn search...");
   await page.goto(SEARCH_QUERY, { waitUntil: "networkidle2", timeout: 60000 });
 
@@ -137,7 +137,7 @@ async function extractProfiles(page) {
         await sendMessage(page, profile, firstName, role, company);
       }
     } catch (error) {
-      console.log(`❌ Error processing profile: ${error.message}`);
+      console.error(`❌ Error processing profile: ${error.message}`);
     }
   }
 
@@ -172,7 +172,7 @@ function getMessageTemplate(firstName, role, company) {
   
       return message;
     } catch (error) {
-      console.error("❌ Error reading message template:", error);
+      console.warn("❌ Error reading message template:", error);
       return `Hello ${firstName}, I came across your profile and wanted to connect!`;
     }
   }
@@ -204,7 +204,7 @@ async function sendMessage(page, profile, firstName, role, company) {
         console.log(`✅ Sending message to ${firstName}...`);
         await page.evaluate(el => el.click(), sendButton);
       } else {
-        console.log(`⚠️ Send button not found for ${firstName}`);
+        console.error(`⚠️ Send button not found for ${firstName}`);
       }
 
       const closeButton = await page.$('button[aria-label="Dismiss"]');
@@ -215,10 +215,10 @@ async function sendMessage(page, profile, firstName, role, company) {
       await page.waitForFunction(() => document.readyState === "complete");
       
     } else {
-      console.log(`⚠️ No "Message" button found for ${firstName}`);
+      console.error(`⚠️ No "Message" button found for ${firstName}`);
     }
   } catch (error) {
-    console.log(`❌ Error messaging ${firstName}: ${error.message}`);
+    console.error(`❌ Error messaging ${firstName}: ${error.message}`);
   }
 }
 
@@ -236,7 +236,7 @@ async function scrapeLinkedInProfiles(email, password) {
   try {
     await loadCookies(page);
     await loginToLinkedIn(page, email, password);
-    const profiles = await extractProfiles(page);
+    const profiles = await extractProfilesAndSendMessage(page);
     console.log(`✅ Scraped ${profiles.length} profiles.`);
     return { success: true, profiles };
   } catch (error) {

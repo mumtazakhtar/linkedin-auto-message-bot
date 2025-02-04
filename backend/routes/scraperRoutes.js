@@ -5,14 +5,14 @@ const Profile = require('../models/Profile');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    const { email, password, searchQuery } = req.body;
+    const { email, password } = req.body;
 
-    if (!email || !password || !searchQuery) {
-        return res.status(400).json({ error: "Missing required fields (email, password, searchQuery)" });
+    if (!email || !password) {
+        return res.status(400).json({ error: "Missing required fields (email, password)" });
     }
 
     // Scrape LinkedIn profiles
-    const response = await scrapeLinkedInProfiles(email, password, searchQuery);
+    const response = await scrapeLinkedInProfiles(email, password);
 
     // Handle error response from scraper
     if (response.error) {
