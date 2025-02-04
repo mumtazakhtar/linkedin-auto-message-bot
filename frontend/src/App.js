@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/App.css';
+import logo from './assets/bearconnect-high-resolution-logo.avif';
 
 function App() {
     const [email, setEmail] = useState('');
@@ -27,16 +28,19 @@ function App() {
     };
 
     return (
-        <div className="container" style={{ maxWidth: '600px', margin: 'auto', padding: '1rem' }}>
-            <h1 className="text-center">LinkedIn Scraper</h1>
+        <div className="container">
+            {/* Logo */}
+            <img src={logo} alt="BearConnect" className="logo" />
 
-            <form>
+            {/* Title */}
+            <h1 className="title">LinkedIn Auto Message Bot</h1>
+
+            {/* Login Form */}
+            <div className="form-container">
                 <div className="form-group">
-                    <label htmlFor="email">Email:</label>
+                    <label>Email:</label>
                     <input
                         type="email"
-                        className="form-control"
-                        id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter LinkedIn Email"
@@ -44,32 +48,36 @@ function App() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="password">Password:</label>
+                    <label>Password:</label>
                     <input
                         type="password"
-                        className="form-control"
-                        id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter LinkedIn Password"
                     />
                 </div>
 
-                <button type="button" className="btn btn-primary mt-3" onClick={fetchProfiles}>
+                <button onClick={fetchProfiles} className="btn">
                     Search
                 </button>
-            </form>
+            </div>
 
-            <ul className="list-group mt-4">
-                {profiles?.map((profile, index) => (
-                    <li key={index} className="list-group-item">
-                        <strong>{profile.name}</strong> - {profile.currentJob} <br />
-                        <a href={profile.linkedinUrl} target="_blank" rel="noreferrer">
-                            View Profile
-                        </a>
-                    </li>
-                ))}
-            </ul>
+            {/* Profile List */}
+            {profiles.length > 0 && (
+                <div className="profile-list">
+                    <h2>Scraped Profiles</h2>
+                    <ul>
+                        {profiles.map((profile, index) => (
+                            <li key={index} className="profile-card">
+                                <strong>{profile.name}</strong> - {profile.currentJob} <br />
+                                <a href={profile.linkedinUrl} target="_blank" rel="noreferrer">
+                                    View Profile
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 }
