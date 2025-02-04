@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     const [email, setEmail] = useState('');
@@ -26,37 +27,42 @@ function App() {
     };
 
     return (
-        <div style={{ maxWidth: '600px', margin: 'auto', padding: '1rem' }}>
-            <h1>LinkedIn Scraper</h1>
+        <div className="container" style={{ maxWidth: '600px', margin: 'auto', padding: '1rem' }}>
+            <h1 className="text-center">LinkedIn Scraper</h1>
 
-            <label>
-                Email:
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter LinkedIn Email"
-                />
-            </label>
-            <br />
+            <form>
+                <div className="form-group">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter LinkedIn Email"
+                    />
+                </div>
 
-            <label>
-                Password:
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter LinkedIn Password"
-                />
-            </label>
-            <br />
-            <button onClick={fetchProfiles} style={{ marginLeft: '0.5rem' }}>
-                Search
-            </button>
+                <div className="form-group">
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter LinkedIn Password"
+                    />
+                </div>
 
-            <ul style={{ marginTop: '1rem' }}>
+                <button type="button" className="btn btn-primary mt-3" onClick={fetchProfiles}>
+                    Search
+                </button>
+            </form>
+
+            <ul className="list-group mt-4">
                 {profiles?.map((profile, index) => (
-                    <li key={index} style={{ marginBottom: '1rem' }}>
+                    <li key={index} className="list-group-item">
                         <strong>{profile.name}</strong> - {profile.currentJob} <br />
                         <a href={profile.linkedinUrl} target="_blank" rel="noreferrer">
                             View Profile
